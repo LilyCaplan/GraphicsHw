@@ -116,22 +116,12 @@ HW3b::resizeGL(int w, int h)
     
     // compute aspect ratio
     float ar = (float) w / h;
-    float xmax, ymax;
-    if(ar > 1.0) {        // wide screen
-        xmax = ar;
-        ymax = 1.;
-    }
-    else {            // tall screen
-        xmax = 1.;
-        ymax = 1 / ar;
-    }
     
     // set viewport to occupy full canvas
     glViewport(0, 0, w, h);
     
-    // init viewing coordinates for orthographic projection
     m_projection.setToIdentity();
-    m_projection.perspective(64.0, ar, 1, 100);
+    m_projection.perspective(64.0, ar, .01, 1000.0f);
 }
 
 
@@ -180,7 +170,6 @@ HW3b::paintGL()
         glUseProgram(m_program[TEX_SHADER].programId());
         glUniformMatrix4fv(m_uniform[TEX_SHADER][VIEW ], 1, GL_FALSE, m_camera->view().constData());
         glUniformMatrix4fv(m_uniform[TEX_SHADER][PROJ ], 1, GL_FALSE, m_projection.constData());
-        glUniform3fv(m_uniform[TEX_SHADER][LIGHTDIR], 1, &m_light->eye()[0]);
         glUniform1i(m_uniform[TEX_SHADER][SAMPLER], 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[0]);
         glDrawElements(GL_TRIANGLE_STRIP, (GLsizei) m_indices_triangles.size(), GL_UNSIGNED_SHORT, 0);
@@ -191,9 +180,7 @@ HW3b::paintGL()
         glUseProgram(m_program[WIRE_SHADER].programId());
         glUniformMatrix4fv(m_uniform[WIRE_SHADER][VIEW ], 1, GL_FALSE, m_camera->view().constData());
         glUniformMatrix4fv(m_uniform[WIRE_SHADER][PROJ ], 1, GL_FALSE, m_projection.constData());
-        glUniform3fv(m_uniform[WIRE_SHADER][LIGHTDIR], 1, &m_light->eye()[0]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[1]);
-        //glDrawArrays(GL_LINES, 0, (GLsizei) m_indices_wireframe.size());
         glDrawElements(GL_LINES, (GLsizei) m_indices_wireframe.size(), GL_UNSIGNED_SHORT, 0);
         glLineWidth(2.0f);
 
