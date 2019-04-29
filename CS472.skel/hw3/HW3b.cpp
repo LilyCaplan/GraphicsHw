@@ -131,7 +131,7 @@ HW3b::resizeGL(int w, int h)
     
     // init viewing coordinates for orthographic projection
     m_projection.setToIdentity();
-    m_projection.perspective(64.0, ar, .1, 100);
+    m_projection.perspective(64.0, ar, 1, 100);
 }
 
 
@@ -192,7 +192,8 @@ HW3b::paintGL()
         glUniformMatrix4fv(m_uniform[WIRE_SHADER][VIEW ], 1, GL_FALSE, m_camera->view().constData());
         glUniformMatrix4fv(m_uniform[WIRE_SHADER][PROJ ], 1, GL_FALSE, m_projection.constData());
         glUniform3fv(m_uniform[WIRE_SHADER][LIGHTDIR], 1, &m_light->eye()[0]);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[0]);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[1]);
+        //glDrawArrays(GL_LINES, 0, (GLsizei) m_indices_wireframe.size());
         glDrawElements(GL_LINES, (GLsizei) m_indices_wireframe.size(), GL_UNSIGNED_SHORT, 0);
         glLineWidth(2.0f);
 
@@ -406,7 +407,7 @@ HW3b::resetMesh()
                 vec.setZ((i==1) ? .5f : 0.0f);
 				break;
 			case DIAGONALBLOCK:
-                vec.setZ(((m_grid-i)-j<2) ? .5f : 0.0f);
+                vec.setZ(((m_grid-i)-j<3) ? .5f : 0.0f);
 				break;
 			case MIDDLEBLOCK:
                 vec.setZ(((i > m_grid/3 && j > m_grid/3)&&(i < m_grid*2/3 && j < m_grid*2/3)) ? .5f : 0.0f);

@@ -19,8 +19,8 @@ void main(){
     
     // Material properties
     vec3 MaterialDiffuseColor = texture(u_Sampler, v_TexCoord).xyz;
-    vec3 MaterialAmbientColor = vec3(0.4,0.4,0.4) * MaterialDiffuseColor;
-    vec3 MaterialSpecularColor = vec3(0.3,0.3,0.3);
+    vec3 MaterialAmbientColor = vec3(0.5,0.5,0.5) * MaterialDiffuseColor;
+    vec3 MaterialSpecularColor = vec3(0.5,0.5,0.5);
     // Normal of the computed fragment, in camera space
     vec3 n = normalize( Normal_cameraspace );
     // Direction of the light (from the fragment to the light)
