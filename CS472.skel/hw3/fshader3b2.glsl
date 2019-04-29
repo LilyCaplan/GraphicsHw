@@ -11,7 +11,7 @@ void main(){
     
     // Light emission properties
     vec3 LightColor = vec3(1,1,1);
-    float LightPower = 0.5f;
+    float LightPower = 1.0f;
     
     // Material properties
     vec3 MaterialDiffuseColor = vec3(1.0, 1.0, 1.0);

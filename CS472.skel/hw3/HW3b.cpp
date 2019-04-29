@@ -131,7 +131,7 @@ HW3b::resizeGL(int w, int h)
     
     // init viewing coordinates for orthographic projection
     m_projection.setToIdentity();
-    m_projection.perspective(64.0, ar, 1.0, 100.0);
+    m_projection.perspective(64.0, ar, .1, 100);
 }
 
 
@@ -182,7 +182,6 @@ HW3b::paintGL()
         glUniformMatrix4fv(m_uniform[TEX_SHADER][PROJ ], 1, GL_FALSE, m_projection.constData());
         glUniform3fv(m_uniform[TEX_SHADER][LIGHTDIR], 1, &m_light->eye()[0]);
         glUniform1i(m_uniform[TEX_SHADER][SAMPLER], 0);
-        glDrawElements(GL_TRIANGLE_STRIP, (GLsizei) m_indices_triangles.size(), GL_UNSIGNED_SHORT, 0);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[0]);
         glDrawElements(GL_TRIANGLE_STRIP, (GLsizei) m_indices_triangles.size(), GL_UNSIGNED_SHORT, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
@@ -194,10 +193,9 @@ HW3b::paintGL()
         glUniformMatrix4fv(m_uniform[WIRE_SHADER][PROJ ], 1, GL_FALSE, m_projection.constData());
         glUniform3fv(m_uniform[WIRE_SHADER][LIGHTDIR], 1, &m_light->eye()[0]);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indicesBuffer[0]);
+        glDrawElements(GL_LINES, (GLsizei) m_indices_wireframe.size(), GL_UNSIGNED_SHORT, 0);
         glLineWidth(2.0f);
-        
-            for(int i=0; i<m_numPoints; i+=3)
-                glDrawArrays(GL_LINE_LOOP, i,  3);
+
 		break;
 	case FLAT_COLOR:
 		glUseProgram(m_program[FLAT_SHADER].programId());	
@@ -399,30 +397,30 @@ HW3b::resetMesh()
 				vec.setZ((i==j && i==m_grid/2) ? 1.0f : 0.0f);
 				break;
 			case HOLE:
-                vec.setZ((!((i > m_grid/3 && j > m_grid/3)&&(i < m_grid*2/3 && j < m_grid*2/3))) ? m_grid/4 : 0.0);
+                vec.setZ((!((i > m_grid/3 && j > m_grid/3)&&(i < m_grid*2/3 && j < m_grid*2/3))) ? .5f : 0.0f);
 				break;
 			case DIAGONALWALL:
-                vec.setZ((((m_grid-i)-j<3) && ((m_grid-i)-j>0)) ? m_grid/6 : 0.0);
+                vec.setZ((((m_grid-i)-j<2) && ((m_grid-i)-j>0)) ? .5f : 0.0f);
 				break;
 			case SIDEWALL:
-                vec.setZ((i==1) ? m_grid/4 : 0.0);
+                vec.setZ((i==1) ? .5f : 0.0f);
 				break;
 			case DIAGONALBLOCK:
-                vec.setZ(((m_grid-i)-j<3) ? m_grid/6 : 0.0);
+                vec.setZ(((m_grid-i)-j<2) ? .5f : 0.0f);
 				break;
 			case MIDDLEBLOCK:
-                vec.setZ(((i > m_grid/3 && j > m_grid/3)&&(i < m_grid*2/3 && j < m_grid*2/3)) ? m_grid/4 : 0.0);
+                vec.setZ(((i > m_grid/3 && j > m_grid/3)&&(i < m_grid*2/3 && j < m_grid*2/3)) ? .5f : 0.0f);
 				break;
 			case CORNERBLOCK:
-                vec.setZ(((i > m_grid*3/4 && j > m_grid*3/4)) ? m_grid/4 : 0.0);
+                vec.setZ(((i > m_grid*3/4 && j > m_grid*3/4)) ? .5f : 0.0f);
 				break;
 			case HILL:
                 vec.setZ((sin(M_PI * ((float)i/(float)m_grid)) +
-                          sin(M_PI * ((float)j/(float)m_grid)))* m_grid/6.0);
+                          sin(M_PI * ((float)j/(float)m_grid)))* .5f);
 				break;
 			case HILLFOUR:
                 vec.setZ((sin(M_PI*2 * ((float)i/(float)m_grid)) +
-                          sin(M_PI*2 * ((float)j/(float)m_grid)))* m_grid/6.0);
+                          sin(M_PI*2 * ((float)j/(float)m_grid)))* .5f);
 				break;
 		}
 	   }
